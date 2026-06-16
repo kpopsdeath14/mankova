@@ -1,0 +1,89 @@
+(ns markova.pages.catalog.logo
+  (:require
+   ["antd" :as antd]
+   ["@ant-design/icons" :as icons]
+   [markova.db :refer [app-state]]
+   [reagent.core :as reagent :refer [as-element]]))
+
+
+(defn logo []
+  (let [
+        Menu antd/Menu
+        Drawer antd/Drawer
+        Image antd/Image
+        Button antd/Button
+
+        side_menu_open (reagent/cursor app-state [:side_menu_open])
+        ]
+    (fn []
+      [:div {:style {:width "100%"
+                     :height 62
+                     :display "flex"
+                     :justify-content "space-between"
+                     :align-items "center"
+                     :padding-right 10
+                     :overflow "hidden"
+                     }}
+       [:> Drawer {:title "Навигация"
+                   :open @side_menu_open
+                   :onClose (fn []
+                              (swap! app-state assoc :side_menu_open false)
+                              )
+                   :style {:font-family "'orchidea_light', sans-serif"}}
+        [:> Menu {:items [{:key "catalog"
+                           :label "каталог"}
+                          {:key "information"
+                           :label "информация"}]
+                  :style {:font-family "'orchidea_light', sans-serif"}
+                  :onSelect (fn [key]
+                              (swap! app-state assoc :page (keyword (:key (js->clj key :keywordize-keys true))))
+                              (set! (.-href (.-location js/window)) (str "/mankova/#/" (:key (js->clj key :keywordize-keys true))))
+                              (swap! app-state assoc :side_menu_open false)
+                              )
+                  }
+         ]
+        ]
+       [:> Image {:src "logo.png"
+                  :preview false
+                  :style {
+                          :height 220
+                          :width  220
+                          }
+                  }
+        ]
+       
+       [:> Button
+        {:onClick
+         (fn []
+           (.impactOccurred (.-HapticFeedback (.-WebApp js/Telegram)) "medium")
+           (swap! app-state assoc :side_menu_open true)
+           )
+         :style {:width 31
+                 
+                 :border "none"
+                 :background "none"
+                 :transform "none"
+                 :transition "none"
+                 :boxShadow "none"
+
+                 :pointer-events "auto"
+                 :cursor "pointer"
+                 :user-select "none"
+                 :touch-action "manipulation"
+                 :outline "none"
+                 :webkit-tap-highlight-color "transparent"
+                 :webkit-user-select "none"
+                 :webkit-touch-callout "none"
+                 }
+         
+         :icon (as-element [:> icons/MenuOutlined {:style {:font-size 25
+                                                           :color "black"
+                                                           }
+                                                   }
+                            ])
+         } 
+        ] 
+       ]
+      )
+    )
+  )

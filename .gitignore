@@ -1,0 +1,18 @@
+.DS_Store
+
+# Secrets
+api_keys.edn
+db_parameters.edn
+
+# Clojure build
+target/
+.clj-kondo/
+.lsp/
+cdek_cities.json
+
+# shadow-cljs / ClojureScript
+.shadow-cljs/
+node_modules/
+package-lock.json
+public/
+order_data.json
